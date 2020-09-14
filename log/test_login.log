@@ -1,0 +1,15 @@
+2020-09-14 16:24:53,061 - [INFO] - log file name is test_login
+2020-09-14 16:24:53,061 - [INFO] - ...init...
+2020-09-14 16:24:57,181 - [INFO] - Open the browser and maximize the window
+2020-09-14 16:24:59,625 - [INFO] - input url success!
+2020-09-14 16:25:01,091 - [INFO] - begin click login btn .....
+2020-09-14 16:25:01,176 - [INFO] - click login btn end .....
+2020-09-14 16:25:02,299 - [INFO] - login is successfully!!
+2020-09-14 16:25:02,299 - [INFO] - begin test
+2020-09-14 16:25:06,828 - [INFO] - the element is visibility
+2020-09-14 16:25:06,919 - [INFO] - click success
+2020-09-14 16:25:18,297 - [ERROR] - test failed !!
+2020-09-14 16:25:18,694 - [INFO] - test FAIL
+2020-09-14 16:25:18,694 - [INFO] - [test_login]: fail
+2020-09-14 16:25:18,711 - [INFO] - beginning closed the windows
+2020-09-14 16:25:21,891 - [ERROR] - closed the windows complete
