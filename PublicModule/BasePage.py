@@ -6,7 +6,7 @@ import win32api
 import win32con
 import json
 
-from PublicModule import logUtil,opt
+from PublicModule import logUtil,profile
 
 
 
@@ -31,23 +31,22 @@ class BasePage:
         self.driver = driver
 
     @classmethod
-    def initial(self, caseid):
+    def initial(cls, caseid):
         print('BasePage init begin ...')
-        self.rootdir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        self.resultFile = os.path.join(self.rootdir, 'result.txt')
-        self.caseid = caseid
-        self.setlogger(caseid)
+        cls.rootdir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        cls.resultFile = os.path.join(cls.rootdir, 'TestResult.txt')
+        cls.caseid = caseid
+        cls.setlogger(cls.caseid)
 
 
     @classmethod
-    def setlogger(self, caseid):
+    def setlogger(cls, caseid):
         print('set_logger begin ...')
-        if hasattr(self, "logHandle"):
-            self.logHandle.close_logger()
-        self.logHandle = logUtil.LogUtil(log_file_name=caseid, log_dir=os.path.join(self.rootdir, 'log'))
-        self.logHandle.info("log file name is {}".format(caseid))
+        if hasattr(cls, "logHandle"):
+            cls.logHandle.close_logger()
+        cls.logHandle = logUtil.LogUtil(log_file_name=caseid, log_dir=os.path.join(cls.rootdir, 'log'))
+        cls.logHandle.info("log file name is {}".format(caseid))
 
-    # @classmethod
     def setResut(self, caseResult=False):
         if caseResult:
             result = 'pass'
@@ -64,7 +63,7 @@ class BasePage:
         f = open(self.resultFile, 'a')
         f.write(resultStr + '\n')
         f.close()
-    # @classmethod
+
     def errorExit(self,msg):
         self.logHandle.error(msg)
         self.setResut()
@@ -76,7 +75,19 @@ class BasePage:
         self.logHandle.error('closed the windows complete')
         exit(-1)
 
-    def find_element(self, *ele, t=1):
+    def find_element(self, *loc):
+        try:
+            if len(loc) >= 3:
+                delay_t = loc[-1]
+                loc = loc[:-1]
+            else:
+                delay_t = 5
+            WebDriverWait(self.driver, delay_t).until(EC.visibility_of_element_located(loc))
+            return self.driver.find_element(*loc)
+        except:
+            self.logHandle.error('Element not found ')
+
+    def wait_time_to_find_element(self, *ele, t=1):
         count = 0
         element = self.find_element_no_print(*ele)
         while not element:
@@ -87,13 +98,6 @@ class BasePage:
             element = self.find_element_no_print(*ele)
         # 找到了元素
         return element
-
-    def find_elements(self, *loc, delay_t=50):
-        try:
-            WebDriverWait(self.driver, delay_t).until(EC.visibility_of_element_located(loc))
-            return self.driver.find_elements(*loc)
-        except:
-            return None
 
     def find_element_no_print(self, *loc):
         try:
@@ -107,12 +111,24 @@ class BasePage:
         except Exception as e:
             return None
 
+    def find_elements(self, *loc, delay_t=50):
+        try:
+            WebDriverWait(self.driver, delay_t).until(EC.visibility_of_element_located(loc))
+            return self.driver.find_elements(*loc)
+        except:
+            return None
+
     def login(self):
-        WebDriverWait(self.driver, 60, 1).until(EC.visibility_of_element_located(self.usernameLoc))
-        self.find_element(*self.usernameLoc).send_keys(opt.LoginInfo['username'])
+        '''
+        登录界面
+        '''
+
+        self.logHandle.info('begin to input username')
+        self.find_element(*self.usernameLoc,2).send_keys(profile.LoginInfo['username'])
+        self.logHandle.info('input username is successfully')
         WebDriverWait(self.driver,10,1).until(EC.element_can_be_clickable(self.titleimg_loc))
         WebDriverWait(self.driver, 30, 1).until(EC.visibility_of_element_located(self.passwordLoc))
-        self.find_element(*self.passwordLoc).send_keys(opt.LoginInfo['passwd'])
+        self.find_element(*self.passwordLoc).send_keys(profile.LoginInfo['passwd'])
         time.sleep(1)
         self.logHandle.info('begin click login btn .....')
         self.find_element(*self.login_loc).click()
@@ -122,7 +138,7 @@ class BasePage:
         count = 0
         while count < 2:
             try:
-                self.driver.get(opt.LoginInfo['url'])  #\n表示回车键
+                self.driver.get(profile.LoginInfo['url'])  #\n表示回车键
                 self.logHandle.info('input url success!')
                 self.login()
                 WebDriverWait(self.driver,30).until(EC.visibility_of_element_located(self.process_loc))
@@ -142,14 +158,14 @@ class BasePage:
         else:
             self.errorExit('open failed !!')
 
-    # @classmethod
+
     def screenshot_img(self):
         '''
         截图，方便失败的时候定位问题
         :return:
         '''
         # imagepath直接写死。
-        imagepath=opt.data_root
+        imagepath=profile.data_root
         # 当脚本允许错误的时候，截图并保存到响应的路径下面。
         self.driver.save_screenshot(os.path.join(imagepath,time.strftime('%Y%m%d_%H%M%S')+'_open.png'))
 

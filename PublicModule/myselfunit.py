@@ -1,6 +1,6 @@
 import unittest
 from selenium import webdriver
-from PublicModule import opt
+from PublicModule import profile,logUtil
 import time
 import win32api
 import win32con
