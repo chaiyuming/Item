@@ -10,7 +10,7 @@ import win32con
 
 
 from PublicModule.myselfunit import MyClass
-from PublicModule import opt
+from PublicModule import profile
 from PublicModule.BasePage import BasePage
 from PageObject.attendancePage import Attendance
 from selenium import webdriver
@@ -43,7 +43,7 @@ class Test(BasePage):
         self.logHandle.info('Exit the browser')
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     test = Test(sys.argv[1],)
     try:
