@@ -6,7 +6,7 @@ from functools import wraps
 
 from selenium import webdriver
 
-def Tryagain(func):
+def Tryagain(func)  :
     @wraps(func)
     def _wrapper(*args,**kwargs):
         try:

@@ -266,9 +266,9 @@ function showTestDetail(div_id){
 
 
 function html_escape(s) {
-    s = s.replace(/&/g,'&amp;');
-    s = s.replace(/</g,'&lt;');
-    s = s.replace(/>/g,'&gt;');
+    s = s.replace(/&/g,'&');
+    s = s.replace(/</g,'<');
+    s = s.replace(/>/g,'>');
     return s;
 }
 
@@ -312,8 +312,8 @@ pre         { }
 
 /* -- heading ---------------------------------------------------------------------- */
 h1 {
-	font-size: 16pt;
-	color: gray;
+    font-size: 16pt;
+    color: gray;
 }
 .heading {
     margin-top: 0ex;
@@ -443,7 +443,7 @@ a.popup_link:hover {
     <td>%(Pass)s</td>
     <td>%(fail)s</td>
     <td>%(error)s</td>
-    <td>&nbsp;</td>
+    <td> </td>
 </tr>
 </table>
 """ # variables: (test_list, count, Pass, fail, error)
@@ -503,7 +503,7 @@ a.popup_link:hover {
     # ENDING
     #
 
-    ENDING_TMPL = """<div id='ending'>&nbsp;</div>"""
+    ENDING_TMPL = """<div id='ending'> </div>"""
 
 # -------------------- The end of the Template class -------------------
 
@@ -536,7 +536,7 @@ class _TestResult(TestResult):
     def startTest(self, test):
         TestResult.startTest(self, test)
         # just one buffer for both stdout and stderr
-        self.outputBuffer= io.StringIO()
+        self.outputBuffer = io.StringIO()
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
         self.stdout0 = sys.stdout
@@ -628,7 +628,8 @@ class HTMLTestRunner(Template_mixin):
         test(result)
         self.stopTime = datetime.datetime.now()
         self.generateReport(test, result)
-        print(sys.stderr,'\nTimeElapsed: %s' % (self.stopTime-self.startTime))
+        # print >> sys.stderr, '\nTime Elapsed: %s' % (self.stopTime-self.startTime)
+        print(sys.stderr, '\nTime Elapsed: %s' % (self.stopTime-self.startTime))
         return result
 
 
@@ -685,6 +686,7 @@ class HTMLTestRunner(Template_mixin):
             ending = ending,
         )
         self.stream.write(output.encode('utf8'))
+        # self.stream.write(output)
 
 
     def _generate_stylesheet(self):
@@ -763,19 +765,21 @@ class HTMLTestRunner(Template_mixin):
         if isinstance(o,str):
             # TODO: some problem with 'string_escape': it escape \n and mess up formating
             # uo = unicode(o.encode('string_escape'))
+            # uo = o.decode('latin-1')
             uo = e
         else:
             uo = o
         if isinstance(e,str):
             # TODO: some problem with 'string_escape': it escape \n and mess up formating
             # ue = unicode(e.encode('string_escape'))
-            uo = e
+            # ue = e.decode('latin-1')
+            ue = e
         else:
             ue = e
 
         script = self.REPORT_TEST_OUTPUT_TMPL % dict(
             id = tid,
-            output = saxutils.escape(uo+ue),
+            output = saxutils.escape(str(uo)+ue),
         )
 
         row = tmpl % dict(

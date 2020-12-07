@@ -70,10 +70,10 @@ class Attendance(BasePage):
                 break
         if result == 1:
             self.logHandle.info('checkout successfully !!')
-            self.setResut(True)
+            self.SetRunResult(True)
         else:
             self.logHandle.info('checkout failed !!')
-            self.setResut()
+            self.SetRunResult()
 
     def vacation(self,department,name,category,starttime,endtime):
         '''

@@ -36,18 +36,18 @@ class BasePage:
         cls.rootdir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         cls.resultFile = os.path.join(cls.rootdir, 'TestResult.txt')
         cls.caseid = caseid
-        cls.setlogger(cls.caseid)
+        cls.setLoggerInfo(cls.caseid)
 
 
     @classmethod
-    def setlogger(cls, caseid):
+    def setLoggerInfo(cls, caseid):
         print('set_logger begin ...')
         if hasattr(cls, "logHandle"):
             cls.logHandle.close_logger()
         cls.logHandle = logUtil.LogUtil(log_file_name=caseid, log_dir=os.path.join(cls.rootdir, 'log'))
         cls.logHandle.info("log file name is {}".format(caseid))
 
-    def setResut(self, caseResult=False):
+    def SetRunResult(self, caseResult=False):
         if caseResult:
             result = 'pass'
         else:
@@ -66,7 +66,7 @@ class BasePage:
 
     def errorExit(self,msg):
         self.logHandle.error(msg)
-        self.setResut()
+        self.SetRunResult()
         self.logHandle.info('beginning closed the windows')
         # # 点击F11退出全屏
         win32api.keybd_event(win32con.VK_F11, 0, win32con.KEYEVENTF_KEYUP, 0)
@@ -135,6 +135,10 @@ class BasePage:
         self.logHandle.info('click login btn end .....')
 
     def open(self):
+        '''
+        打开浏览器并且进行登入到主网页，写一个循环防止第一次偶然失败后可以再进行一次
+        :return:
+        '''
         count = 0
         while count < 2:
             try:
@@ -170,12 +174,24 @@ class BasePage:
         self.driver.save_screenshot(os.path.join(imagepath,time.strftime('%Y%m%d_%H%M%S')+'_open.png'))
 
     def switchframe(self, loc):
+        '''
+        :param loc: 切换到某个画布
+        :return:
+        '''
         return self.driver.switch_to_frame(loc)
 
     def switch_default_frame(self):
+        '''
+        切换到主画布界面，主界面
+        :return:
+        '''
         return self.driver.switch_to_default_content()
 
     def switch_parent_frame(self):
+        '''
+        切换到上一层画布
+        :return:
+        '''
         self.driver.switch_to.parent_frame()
 
 
