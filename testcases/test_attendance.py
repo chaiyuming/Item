@@ -22,15 +22,14 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class Test(BasePage):
 
-    def __init__(self,caseid):
+    def __init__(self,case):
         option = webdriver.ChromeOptions()
         option.add_argument('disable-infonars')
         self.driver = webdriver.Chrome(r'd:\chromedriver.exe', options=option)
-        BasePage.initial(caseid)
-        self.logHandle.info('...init...')
         self.driver.implicitly_wait(0)
         self.driver.maximize_window()
-
+        self.initial(case)
+        self.logHandle.info('...init...')
         self.logHandle.info('Open the browser and maximize the window')
 
     def test_case(self):
@@ -44,14 +43,14 @@ class Test(BasePage):
 
 
 if __name__ == "__main__":
-
+    sys.argv = ['1','test_attendance']
     test = Test(sys.argv[1],)
     try:
         test.test_case()
     except Exception as e:
         val = traceback.format_exc()
-        print(val)
-        test.errorExit('test failed !!')
+        BasePage.logHandle.error(val)
+        test.errorquit('test failed !!')
 
 
 

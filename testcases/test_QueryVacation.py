@@ -56,7 +56,7 @@ if __name__=="__main__":
     except Exception as e:
         val = traceback.format_exc()
         print(val)
-        test.errorExit('test failed !!')
+        test.errorquit('test failed !!')
 
 
 

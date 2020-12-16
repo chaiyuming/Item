@@ -12,6 +12,7 @@ from PublicModule import logUtil,profile
 
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -23,48 +24,49 @@ class BasePage:
     titleimg_loc = (By.XPATH, '//*[@id="app"]/div/div[4]/div/img')
     passwordLoc = (By.XPATH, '//*[@id="app"]/div/div[4]/form/div[2]/div/div/input')
     login_loc = (By.XPATH, '//*[@id="app"]/div/div[4]/form/div[3]/div/button')
-    process_loc= (By.XPATH, '//*[@id="app"]/section/div[1]/div[2]/div[1]/span')
-    attendance_loc=(By.XPATH,'//*[@id="app"]/section/div[1]/div[2]/div[4]/span')
-    frame_loc=(By.XPATH, '//*[@id="app"]/div/div[2]')
+    process_loc = (By.XPATH, '//*[@id="app"]/section/div[1]/div[2]/div[1]/span')
+    attendance_loc = (By.XPATH,'//*[@id="app"]/section/div[1]/div[2]/div[4]/span')
+    frame_loc = (By.XPATH, '//*[@id="app"]/div/div[2]')
 
     def __init__(self, driver):
         self.driver = driver
 
     @classmethod
-    def initial(cls, caseid):
+    def initial(cls, case):
         print('BasePage init begin ...')
-        cls.rootdir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        cls.resultFile = os.path.join(cls.rootdir, 'TestResult.txt')
-        cls.caseid = caseid
-        cls.setLoggerInfo(cls.caseid)
+        cls.TestResultPath = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        cls.resultFile = os.path.join(cls.TestResultPath, 'TestResult.txt')
+        cls.case = case
+        cls.setLoggerInfo(cls.case)
 
 
     @classmethod
-    def setLoggerInfo(cls, caseid):
+    def setLoggerInfo(cls, case):
         print('set_logger begin ...')
+        cls.LogFilePath = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         if hasattr(cls, "logHandle"):
             cls.logHandle.close_logger()
-        cls.logHandle = logUtil.LogUtil(log_file_name=caseid, log_dir=os.path.join(cls.rootdir, 'log'))
-        cls.logHandle.info("log file name is {}".format(caseid))
+        cls.logHandle = logUtil.LogUtil(log_file_name=case, log_dir=os.path.join(cls.LogFilePath, 'log'))
+        cls.logHandle.info("log file name is {}".format(case))
 
-    def SetRunResult(self, caseResult=False):
-        if caseResult:
+    def SetRunResult(self, RunResult= False):
+        if RunResult:
             result = 'pass'
         else:
             self.screenshot_img()
             result = 'fail'
-        resultStr = '[%s]: %s' % (self.caseid, result)
+        Result = '[%s]: %s' % (self.case, result)
         if hasattr(self, "logHandle"):
             self.logHandle.info('test %s' % result.upper())
-            self.logHandle.info(resultStr)
+            self.logHandle.info(Result)
         else:
             print('test %s' % result.upper())
-            print(resultStr)
+            print(Result)
         f = open(self.resultFile, 'a')
-        f.write(resultStr + '\n')
+        f.write(Result + '\n')
         f.close()
 
-    def errorExit(self,msg):
+    def errorquit(self, msg):
         self.logHandle.error(msg)
         self.SetRunResult()
         self.logHandle.info('beginning closed the windows')
@@ -160,7 +162,7 @@ class BasePage:
                 # win32api.keybd_event(13, 0, win32con.KEYEVENTF_KEYUP,0) #释放按键
                 self.driver.refresh()
         else:
-            self.errorExit('open failed !!')
+            self.errorquit('open failed !!')
 
 
     def screenshot_img(self):
@@ -169,7 +171,7 @@ class BasePage:
         :return:
         '''
         # imagepath直接写死。
-        imagepath=profile.data_root
+        imagepath=profile.data_path
         # 当脚本允许错误的时候，截图并保存到响应的路径下面。
         self.driver.save_screenshot(os.path.join(imagepath,time.strftime('%Y%m%d_%H%M%S')+'_open.png'))
 
