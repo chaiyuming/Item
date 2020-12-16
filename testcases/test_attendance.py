@@ -49,7 +49,7 @@ if __name__ == "__main__":
         test.test_case()
     except Exception as e:
         val = traceback.format_exc()
-        BasePage.logHandle.error(val)
+        test.logHandle.error(val)
         test.errorquit('test failed !!')
 
 
