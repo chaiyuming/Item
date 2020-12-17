@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import os
 import sys
-from PublicModule import profile
+from PublicObject import PublicConfig
 
 class video_record():
     def __init__(self, name):

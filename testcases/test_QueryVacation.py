@@ -9,9 +9,9 @@ import win32api
 import win32con
 
 
-from PublicModule.myselfunit import MyClass
-from PublicModule import profile
-from PublicModule.BasePage import BasePage
+from PublicObject.myselfunit import MyClass
+from PublicObject import PublicConfig
+from PublicObject.BasePage import BasePage
 from PageObject.attendancePage import Attendance
 from selenium import webdriver
 from selenium.webdriver.common.by import By

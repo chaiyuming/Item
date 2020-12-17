@@ -15,3 +15,10 @@ def Tryagain(func)  :
             print('try again ............')
             func(*args,**kwargs)
     return _wrapper
+
+
+def DriverPath():
+    path = r'd:\chromedriver.exe'
+    return path
+
+

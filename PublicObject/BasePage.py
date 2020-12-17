@@ -6,8 +6,8 @@ import win32api
 import win32con
 import json
 
-from PublicModule import logUtil,profile
-
+from PublicObject import logUtil,PublicConfig
+from PublicObject import publicdata
 
 
 from selenium import webdriver
@@ -38,7 +38,6 @@ class BasePage:
         cls.resultFile = os.path.join(cls.TestResultPath, 'TestResult.txt')
         cls.case = case
         cls.setLoggerInfo(cls.case)
-
 
     @classmethod
     def setLoggerInfo(cls, case):
@@ -126,11 +125,11 @@ class BasePage:
         '''
 
         self.logHandle.info('begin to input username')
-        self.find_element(*self.usernameLoc,2).send_keys(profile.LoginInfo['username'])
+        self.find_element(*self.usernameLoc,2).send_keys(PublicConfig.LoginInfo['username'])
         self.logHandle.info('input username is successfully')
         WebDriverWait(self.driver,10,1).until(EC.element_can_be_clickable(self.titleimg_loc))
         WebDriverWait(self.driver, 30, 1).until(EC.visibility_of_element_located(self.passwordLoc))
-        self.find_element(*self.passwordLoc).send_keys(profile.LoginInfo['passwd'])
+        self.find_element(*self.passwordLoc).send_keys(PublicConfig.LoginInfo['passwd'])
         time.sleep(1)
         self.logHandle.info('begin click login btn .....')
         self.find_element(*self.login_loc).click()
@@ -144,7 +143,7 @@ class BasePage:
         count = 0
         while count < 2:
             try:
-                self.driver.get(profile.LoginInfo['url'])  #\n表示回车键
+                self.driver.get(PublicConfig.LoginInfo['url'])  #\n表示回车键
                 self.logHandle.info('input url success!')
                 self.login()
                 WebDriverWait(self.driver,30).until(EC.visibility_of_element_located(self.process_loc))
@@ -164,14 +163,13 @@ class BasePage:
         else:
             self.errorquit('open failed !!')
 
-
     def screenshot_img(self):
         '''
         截图，方便失败的时候定位问题
         :return:
         '''
         # imagepath直接写死。
-        imagepath=profile.data_path
+        imagepath=PublicConfig.data_path
         # 当脚本允许错误的时候，截图并保存到响应的路径下面。
         self.driver.save_screenshot(os.path.join(imagepath,time.strftime('%Y%m%d_%H%M%S')+'_open.png'))
 

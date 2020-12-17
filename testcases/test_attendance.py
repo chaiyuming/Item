@@ -9,41 +9,36 @@ import win32api
 import win32con
 
 
-from PublicModule.myselfunit import MyClass
-from PublicModule import profile
-from PublicModule.BasePage import BasePage
+from PublicObject.myselfunit import MyClass
+from PublicObject import PublicConfig
+from PublicObject.BasePage import BasePage
 from PageObject.attendancePage import Attendance
 from selenium import webdriver
+from PublicObject import publicdata
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import  ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class Test(BasePage):
+class Test(BasePage,MyClass):
 
-    def __init__(self,case):
-        option = webdriver.ChromeOptions()
-        option.add_argument('disable-infonars')
-        self.driver = webdriver.Chrome(r'd:\chromedriver.exe', options=option)
-        self.driver.implicitly_wait(0)
-        self.driver.maximize_window()
+    def __init__(self, case):
+        self.setUp()
         self.initial(case)
-        self.logHandle.info('...init...')
         self.logHandle.info('Open the browser and maximize the window')
+        self.logHandle.info('...init...')
 
     def test_case(self):
         self.open()
         self.logHandle.info('begin test')
         Attendance(self.driver).place()
-        # # 点击F11退出全屏
-        time.sleep(1)
-        self.driver.quit()
+        self.teardown()
         self.logHandle.info('Exit the browser')
 
 
 if __name__ == "__main__":
-    sys.argv = ['1','test_attendance']
+    sys.argv = ['1', 'test_attendance']
     test = Test(sys.argv[1],)
     try:
         test.test_case()
