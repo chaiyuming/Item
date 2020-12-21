@@ -115,6 +115,8 @@ bar(**{'a': 1, 'b': 2, 'c': 3}) #1，2，3
 
 '''
 
+
+'''
 class gradapa():
     def __init__(self, money):
         self.money = money
@@ -153,3 +155,10 @@ fc(gradapa1)  # 这里的多态性体现是向同一个函数，传递不同参�
 fc(father1)
 print(fc(mother1))
 # fc(mother1)
+'''
+
+l=['a','b','c']
+
+m=','.join(l)
+print(','.join(l))
+print(type(m))

@@ -90,17 +90,17 @@ class BasePage:
 
     def wait_time_to_find_element(self, *ele, t=1):
         count = 0
-        element = self.find_element_no_print(*ele)
+        element = self.find(*ele)
         while not element:
             count += 1
             if count > t:
                 # 没找到元素
                 return None
-            element = self.find_element_no_print(*ele)
+            element = self.find(*ele)
         # 找到了元素
         return element
 
-    def find_element_no_print(self, *loc):
+    def find(self, *loc):
         try:
             if len(loc) >= 3:
                 delay_t = loc[-1]

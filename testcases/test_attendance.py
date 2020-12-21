@@ -36,7 +36,6 @@ class Test(BasePage,MyClass):
         self.teardown()
         self.logHandle.info('Exit the browser')
 
-
 if __name__ == "__main__":
     sys.argv = ['1', 'test_attendance']
     test = Test(sys.argv[1],)
