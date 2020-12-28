@@ -10,7 +10,6 @@ import win32con
 
 
 from PublicObject.myselfunit import MyClass
-from PublicObject import PublicConfig
 from PublicObject.BasePage import BasePage
 from PageObject.attendancePage import Attendance
 from selenium import webdriver

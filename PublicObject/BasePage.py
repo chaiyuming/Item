@@ -178,20 +178,25 @@ class BasePage:
         :param loc: 切换到某个画布
         :return:
         '''
-        return self.driver.switch_to_frame(loc)
+        return self.driver.switch_to.frame(loc)
 
     def switch_default_frame(self):
         '''
         切换到主画布界面，主界面
         :return:
         '''
-        return self.driver.switch_to_default_content()
+        return self.driver.switch_to.default_content()
 
     def switch_parent_frame(self):
         '''
         切换到上一层画布
         :return:
         '''
-        self.driver.switch_to.parent_frame()
+        return self.driver.switch_to.parent_frame()
 
-
+    def switch_alert(self):
+        '''
+        切换到弹窗
+        :return:
+        '''
+        return self.driver.switch_to.alert()
