@@ -1,5 +1,5 @@
 from selenium import webdriver
-from PublicObject import PublicConfig,logUtil,BasePage
+from PublicObject import logUtil,BasePage
 import time
 import win32api
 import win32con

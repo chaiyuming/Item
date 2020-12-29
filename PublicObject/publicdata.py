@@ -18,7 +18,8 @@ def Tryagain(func)  :
 
 
 def DriverPath():
-    path = r'd:\chromedriver.exe'
+    # path = r'd:\chromedriver.exe'
+    path = r'E:\Google\chromedriver87_win32\chromedriver.exe'
     return path
 
 

@@ -32,21 +32,20 @@ class BasePage:
         self.driver = driver
 
     @classmethod
-    def initial(cls, case):
+    def initial(self, case):
         print('BasePage init begin ...')
-        cls.TestResultPath = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        cls.resultFile = os.path.join(cls.TestResultPath, 'TestResult.txt')
-        cls.case = case
-        cls.setLoggerInfo(cls.case)
-
+        self.TestResultPath = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        self.resultFile = os.path.join(self.TestResultPath, 'TestResult.txt')
+        self.case = case
+        self.setLoggerInfo(self.case)
     @classmethod
-    def setLoggerInfo(cls, case):
-        print('set_logger begin ...')
-        cls.LogFilePath = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        if hasattr(cls, "logHandle"):
-            cls.logHandle.close_logger()
-        cls.logHandle = logUtil.LogUtil(log_file_name=case, log_dir=os.path.join(cls.LogFilePath, 'log'))
-        cls.logHandle.info("log file name is {}".format(case))
+    def setLoggerInfo(self, case):
+        print('... set logger begin ...')
+        self.LogFilePath = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        if hasattr(self, "log"):
+            self.log.close_logger()
+        self.log = logUtil.LogUtil(log_file_name=case, log_dir=os.path.join(self.LogFilePath, 'log'))
+        self.log.info("log_file name is %s" % case)
 
     def SetRunResult(self, RunResult= False):
         if RunResult:
@@ -55,9 +54,9 @@ class BasePage:
             self.screenshot_img()
             result = 'fail'
         Result = '[%s]: %s' % (self.case, result)
-        if hasattr(self, "logHandle"):
-            self.logHandle.info('test %s' % result.upper())
-            self.logHandle.info(Result)
+        if hasattr(self, "log"):
+            self.log.info('test %s' % result.upper())
+            self.log.info(Result)
         else:
             print('test %s' % result.upper())
             print(Result)
@@ -66,14 +65,14 @@ class BasePage:
         f.close()
 
     def errorquit(self, msg):
-        self.logHandle.error(msg)
+        self.log.error(msg)
         self.SetRunResult()
-        self.logHandle.info('beginning closed the windows')
+        self.log.info('beginning closed the windows')
         # # 点击F11退出全屏
         win32api.keybd_event(win32con.VK_F11, 0, win32con.KEYEVENTF_KEYUP, 0)
         time.sleep(1)
         self.driver.quit()
-        self.logHandle.error('closed the windows complete')
+        self.log.error('closed the windows complete')
         exit(-1)
 
     def find_element(self, *loc):
@@ -86,7 +85,7 @@ class BasePage:
             WebDriverWait(self.driver, delay_t).until(EC.visibility_of_element_located(loc))
             return self.driver.find_element(*loc)
         except:
-            self.logHandle.error('Element not found ')
+            self.log.error('Element not found ')
 
     def wait_time_to_find_element(self, *ele, t=1):
         count = 0
@@ -124,16 +123,16 @@ class BasePage:
         登录界面
         '''
 
-        self.logHandle.info('begin to input username')
+        self.log.info('begin to input username')
         self.find_element(*self.usernameLoc,2).send_keys(PublicConfig.LoginInfo['username'])
-        self.logHandle.info('input username is successfully')
+        self.log.info('input username is successfully')
         WebDriverWait(self.driver,10,1).until(EC.element_can_be_clickable(self.titleimg_loc))
         WebDriverWait(self.driver, 30, 1).until(EC.visibility_of_element_located(self.passwordLoc))
         self.find_element(*self.passwordLoc).send_keys(PublicConfig.LoginInfo['passwd'])
         time.sleep(1)
-        self.logHandle.info('begin click login btn .....')
+        self.log.info('begin click login btn .....')
         self.find_element(*self.login_loc).click()
-        self.logHandle.info('click login btn end .....')
+        self.log.info('click login btn end .....')
 
     def open(self):
         '''
@@ -144,16 +143,16 @@ class BasePage:
         while count < 2:
             try:
                 self.driver.get(PublicConfig.LoginInfo['url'])  #\n表示回车键
-                self.logHandle.info('input url success!')
+                self.log.info('input url success!')
                 self.login()
                 WebDriverWait(self.driver,30).until(EC.visibility_of_element_located(self.process_loc))
-                self.logHandle.info('login is successfully!!')
+                self.log.info('login is successfully!!')
                 # targetElem = self.wait_time_to_find_element(*self.agreement_submit_loc, 1)
                 # self.driver.execute_script("arguments[0].scrollIntoView();", targetElem)
                 break
             except :
                 count += 1
-                self.logHandle.info('the count is %s'%count)
+                self.log.info('the count is %s' % count)
                 self.screenshot_img()
                 # 处理 js 弹窗事件
                 # win32api.keybd_event(13,0,0,0) # enter键

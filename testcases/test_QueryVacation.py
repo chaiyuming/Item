@@ -32,20 +32,20 @@ class Test(BasePage):
         option.add_argument('disable-infonars')
         self.driver = webdriver.Chrome(r'd:\chromedriver.exe', options=option)
         BasePage.initial(caseid)
-        self.logHandle.info('...init...')
+        self.log.info('...init...')
         self.driver.implicitly_wait(0)
         self.driver.maximize_window()
 
-        self.logHandle.info('Open the browser and maximize the window')
+        self.log.info('Open the browser and maximize the window')
 
     def test_case(self):
         self.open()
-        self.logHandle.info('begin test')
+        self.log.info('begin test')
         Attendance(self.driver).vacation(self.department,self.name,self.category,self.starttime,self.endtime)
         # # 点击F11退出全屏
         time.sleep(1)
         self.driver.quit()
-        self.logHandle.info('Exit the browser')
+        self.log.info('Exit the browser')
 
 
 if __name__=="__main__":
